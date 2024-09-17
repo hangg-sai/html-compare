@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Compare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    {% for el in contents %}
+    <div class="compare">
+      <video
+        class="compared compared-left"
+        data-compare="{{ el['label1'] }}"
+        loop
+        muted
+        autoplay
+      >
+        <source src="{{ el['path1'] }}" type="video/mp4" />
+        <p>Your browser doesn't support HTML5 video.</p>
+      </video>
+      <video
+        class="compared compared-right"
+        data-compare="{{ el['label2'] }}"
+        loop
+        muted
+        autoplay
+      >
+        <source src="{{ el['path2'] }}" type="video/mp4" />
+        <p>Your browser doesn't support HTML5 video.</p>
+      </video>
+    </div>
+    {% endfor %}
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='compare.js') }}"
+    ></script>
+  </body>
+</html>
