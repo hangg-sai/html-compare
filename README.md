@@ -1,3 +1,5 @@
+Inspired largely by [nivoliev/html-compre](https://github.com/nivoliev/html-compare).
+
 ```bash
 python server.py \
     --video1_glob "/PATH/TO/VIDEO1_*.mp4" \
