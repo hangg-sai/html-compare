@@ -63,7 +63,6 @@
       console.error("Unable to determine the size of the compared element");
       return;
     }
-    console.log(w, h);
 
     sources = [];
     if (compared.length == 2) {
@@ -124,15 +123,13 @@
       var y = e.clientY - rect.y;
 
       if (
-        x < 0 ||
-        x > context.canvas.width ||
-        y < 0 ||
-        y > context.canvas.height
+        !(
+          x < 0 ||
+          x > context.canvas.width ||
+          y < 0 ||
+          y > context.canvas.height
+        )
       ) {
-        //the mouse is out of the canvas
-        context.mag0.style.display = "none";
-        context.mag1.style.display = "none";
-      } else {
         // the mouse in is the canvas, update split position
         setTimeout(move_split, 0, context, x, y);
       }
@@ -188,9 +185,24 @@
     ctx.stroke();
 
     //put labels
+    var tx = ctx.measureText(s[0].label).width;
+    var ty = ctx.measureText(s[0].label).width;
     ctx.font = "50px sans-serif";
-    ctx.fillText(s[0].label, 10, 50);
-    ctx.fillText(s[1].label, w - 10 - ctx.measureText(s[1].label).width, 50);
+    ctx.fillStyle = "white";
+    ctx.globalAlpha = 0.8;
+    ctx.fillRect(0, 0, 10 + tx + 10, 10 + ty + 10);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "black";
+    ctx.fillText(s[0].label, 10, 10 + ty);
+    var tx = ctx.measureText(s[1].label).width;
+    var ty = ctx.measureText(s[1].label).width;
+    ctx.fillStyle = "white";
+    ctx.globalAlpha = 0.8;
+    ctx.fillRect(w - 10 - tx - 10, 0, 10 + tx + 10, 10 + ty + 10);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "black";
+    ctx.fillText(s[1].label, w - 10 - tx, 10 + ty);
+    // ctx.fillText(s[1].label, w - 10 - ctx.measureText(s[1].label).width, 10);
 
     if (s[0].elt.nodeName == "VIDEO" && s[1].elt.nodeName == "VIDEO") {
       s[0].elt.addEventListener("seeked", () => {
@@ -247,7 +259,7 @@
     return container;
   }
 
-  function create_play_toggle(context) {
+  function create_play_toggle(context, elt) {
     //container
     var container = document.createElement("div");
     container.className = "compare-setting";
@@ -259,6 +271,15 @@
       .map((c) => c.elt)
       .filter((e) => e.nodeName == "VIDEO");
     icon.addEventListener("click", function () {
+      if (icon.classList.contains("play")) {
+        icon.classList.replace("play", "pause");
+        videos.forEach((v) => v.play());
+      } else {
+        icon.classList.replace("pause", "play");
+        videos.forEach((v) => v.pause());
+      }
+    });
+    elt.addEventListener("click", function () {
       if (icon.classList.contains("play")) {
         icon.classList.replace("play", "pause");
         videos.forEach((v) => v.play());
@@ -284,8 +305,22 @@
     var c1 = context.sources[1].elt;
     if (c0.nodeName == "VIDEO" || c1.nodeName == "VIDEO") {
       //play pause
-      var playpause = create_play_toggle(context);
+      var playpause = create_play_toggle(context, elt);
       settings.appendChild(playpause);
+
+      // //video progress slider
+      // var progress = create_slider("Progress", context, "progress", 0, 100, 1);
+      // var slider = progress.querySelector("input");
+      // //update video playback progress on slider change
+      // slider.addEventListener("change", function (e) {
+      //   if (c0.nodeName == "VIDEO") {
+      //     c0.playbackRate = e.currentTarget.value;
+      //   }
+      //   if (c1.nodeName == "VIDEO") {
+      //     c1.playbackRate = e.currentTarget.value;
+      //   }
+      // });
+      // settings.appendChild(progress);
 
       //video speed slider
       var speed = create_slider("Speed", context, "speed", 0, 1, 0.1);

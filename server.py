@@ -71,7 +71,7 @@ def main():
     app.add_url_rule("/", view_func=path_view)
     app.add_url_rule("/<path:url>", view_func=path_view)
 
-    app.run(port=args.port, threaded=False, debug=True)
+    app.run(port=args.port, threaded=True, debug=True)
 
 
 if __name__ == "__main__":
