@@ -1,4 +1,4 @@
-Inspired largely by [nivoliev/html-compre](https://github.com/nivoliev/html-compare).
+Inspired largely by [nivoliev/html-compre](https://github.com/nivoliev/html-compare) and [vye16/cluster_fs](https://github.com/vye16/cluster_fs/).
 
 ```bash
 python server.py \
